@@ -1,0 +1,29 @@
+.userGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.card {
+  min-height: 12rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingCard {
+  animation: 1.5s ease infinite loadingBox;
+}
+
+@keyframes loadingBox {
+  0%,
+  100% {
+    background-color: #e1e1e1;
+  }
+  50% {
+    background-color: #eaeaea;
+  }
+}
