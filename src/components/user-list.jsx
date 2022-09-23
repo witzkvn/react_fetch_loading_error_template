@@ -8,40 +8,48 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
 
   // empêche de re-générer la fonction à chaque render et donc de changer la référence à fetchUsers, ce qui relancerait le useEffect
-  const fetchUsers = useCallback(async (fetchUrl) => {
-    console.log("new function render");
-    setError(null);
-    try {
-      const res = await fetch(fetchUrl);
-      const data = await res.json();
-      setUsers(data);
-    } catch (error) {
-      setError(true);
-    }
-    setIsLoading(false);
-  }, []);
+  const fetchUsers = useCallback(
+    async (fetchUrl) => {
+      setError(null);
+      try {
+        const res = await fetch(fetchUrl);
+        const data = await res.json();
+
+        if (Object.keys(data).length === 0) {
+          setError(true);
+        } else {
+          setUsers(data);
+        }
+        console.log(users);
+      } catch (error) {
+        setError(true);
+      }
+    },
+    [users]
+  );
 
   useEffect(() => {
     setIsLoading(true);
-    const myTimeout = setTimeout(
-      () =>
-        fetchUsers("https://jsonplaceholder.typicode.com/users").then(() =>
-          setIsLoading(false)
-        ),
-      3000
+
+    // REAL SITUATION : fetch and then set isLoading to false
+    fetchUsers("https://jsonplaceholder.typicode.com/users").then(() =>
+      setIsLoading(false)
     );
 
-    return () => {
-      clearTimeout(myTimeout);
-      setUsers([]);
-    };
+    // JUST FO TESTING : SET A TIMEOUT
+    // const myTimeout = setTimeout(
+    //   () =>
+    //     fetchUsers("https://jsonplaceholder.typicode.com/users").then(() =>
+    //       setIsLoading(false)
+    //     ),
+    //   3000
+    // );
+
+    // return () => {
+    //   clearTimeout(myTimeout);
+    //   setUsers([]);
+    // };
   }, [fetchUsers]);
-
-  if (error) {
-    return (
-      <p>Une erreur est survenue lors de la récupération des utilisateurs...</p>
-    );
-  }
 
   if (isLoading) {
     return (
@@ -61,6 +69,12 @@ const UserList = () => {
 
   if (!isLoading && users.length === 0) {
     return <p>Aucun utilisateur n'a été trouvé.</p>;
+  }
+
+  if (error) {
+    return (
+      <p>Une erreur est survenue lors de la récupération des utilisateurs...</p>
+    );
   }
 
   return (
