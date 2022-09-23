@@ -10,7 +10,7 @@ const UserList = () => {
   // empêche de re-générer la fonction à chaque render et donc de changer la référence à fetchUsers, ce qui relancerait le useEffect
   const fetchUsers = useCallback(
     async (fetchUrl) => {
-      setError(null);
+      setError(false);
       try {
         const res = await fetch(fetchUrl);
         const data = await res.json();
