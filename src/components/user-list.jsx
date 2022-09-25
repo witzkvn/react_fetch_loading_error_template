@@ -8,25 +8,22 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
 
   // empêche de re-générer la fonction à chaque render et donc de changer la référence à fetchUsers, ce qui relancerait le useEffect
-  const fetchUsers = useCallback(
-    async (fetchUrl) => {
-      setError(false);
-      try {
-        const res = await fetch(fetchUrl);
-        const data = await res.json();
+  const fetchUsers = useCallback(async (fetchUrl) => {
+    setError(false);
+    try {
+      const res = await fetch(fetchUrl);
+      const data = await res.json();
 
-        if (Object.keys(data).length === 0) {
-          setError(true);
-        } else {
-          setUsers(data);
-        }
-        console.log(users);
-      } catch (error) {
+      if (Object.keys(data).length === 0) {
         setError(true);
+      } else {
+        setUsers(data);
       }
-    },
-    [users]
-  );
+      console.log(users);
+    } catch (error) {
+      setError(true);
+    }
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
